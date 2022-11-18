@@ -28,12 +28,15 @@ module comparator(
     
     wire greater = gt_high || (eq_high && gt_low);
     wire less = lt_high || (eq_high && lt_low);
+    wire equal = eq_high && eq_low;
     
     always @(*) begin
-        casex({greater, less})
-            2'b1x: out_reg = 2'sb01; // 1
-            2'b01: out_reg = 2'sb11; // -1
-            default: out_reg = 2'sb01; // 1
+       
+        case({greater, equal, less})
+            3'b100: out_reg = 2'sb01; // 1
+            3'b010: out_reg = 2'sb00; // 0
+            3'b001: out_reg = 2'sb11; // -1 
+            default: out_reg = 2'sbxx; // x
         endcase
     end
     
